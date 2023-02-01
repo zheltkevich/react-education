@@ -1,1 +1,1 @@
-# react-uducation
+# react-education
