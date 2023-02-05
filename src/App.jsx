@@ -49,7 +49,11 @@ function App() {
             <hr />
             {/* ========================== */}
             <PostForm create={createPost} />
-            <PostsList remove={removePost} posts={posts} title={'JavaScript'} />
+            {
+                posts.length
+                    ? <PostsList remove={removePost} posts={posts} title={'JavaScript'} />
+                    : <h2 style={{textAlign: 'center'}}>Посты не найдены!</h2>
+            }
         </div>
     )
 }
