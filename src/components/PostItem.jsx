@@ -1,6 +1,11 @@
 import React from "react";
+import AppButton from '../components/ui/button/AppButton'
 
 const PostItem = (props) => {
+    const removePost = () => {
+        props.remove(props.post);
+    }
+
     return (
         <div className="post">
             <div className="post__content">
@@ -8,7 +13,7 @@ const PostItem = (props) => {
                 <p>{props.post.description}</p>
             </div>
             <div className="post__buttons">
-                <button type="button">Удалить</button>
+                <AppButton onClick={removePost} type="button">Удалить</AppButton>
             </div>
         </div>
     );

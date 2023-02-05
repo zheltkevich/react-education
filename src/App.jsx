@@ -31,6 +31,12 @@ function App() {
         setPosts([...posts, newPost])
     }
 
+    const removePost = (post) => {
+        console.log('remove', post.id);
+        setPosts(posts.filter(item => item.id !== post.id))
+    }
+
+
     return (
         <div className="app">
             <div className="first-components">
@@ -43,7 +49,7 @@ function App() {
             <hr />
             {/* ========================== */}
             <PostForm create={createPost} />
-            <PostsList posts={posts} title={'JavaScript'} />
+            <PostsList remove={removePost} posts={posts} title={'JavaScript'} />
         </div>
     )
 }
