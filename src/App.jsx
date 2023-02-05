@@ -1,54 +1,69 @@
 import React, {useState} from "react"
 import './styles/App.css'
-import Counter from "./components/11111/Counter"
-import ClassCounter from "./components/11111/ClassCounter"
-import InputText from "./components/11111/InputText"
+// import Counter from "./components/11111/Counter"
+// import ClassCounter from "./components/11111/ClassCounter"
+// import InputText from "./components/11111/InputText"
 import PostsList from "./components/PostsList"
 import PostForm from "./components/PostForm"
+import AppSelect from "./components/ui/select/AppSelect"
+import AppInput from "./components/ui/input/AppInput"
 
 const POSTS = [
     {
         id: 1,
-        title: 'Javascript',
-        description: 'Javascript - язык программирования'
+        title: 'aa',
+        description: 'zz'
     },
     {
         id: 2,
-        title: 'Javascript 2',
-        description: 'Javascript - язык программирования'
+        title: 'bb',
+        description: 'yy'
     },
     {
         id: 3,
-        title: 'Javascript 3',
-        description: 'Javascript - язык программирования'
+        title: 'cc',
+        description: 'xx'
     },
 ]
 
 function App() {
     const [posts, setPosts] = useState(POSTS)
-
+    const [selectedSort, setSelectedSort] = useState('')
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
     }
-
     const removePost = (post) => {
         console.log('remove', post.id);
         setPosts(posts.filter(item => item.id !== post.id))
     }
-
+    const sortPosts = (sort) => {
+        setSelectedSort(sort)
+        setPosts([...posts].sort((a,b) => a[sort].localeCompare(b[sort])))
+    }
 
     return (
         <div className="app">
-            <div className="first-components">
+            {/* <div className="first-components">
                 <InputText></InputText>
                 <div className="first-components__counters">
                     <Counter></Counter>
                     <ClassCounter></ClassCounter>
                 </div>
             </div>
-            <hr />
+            <hr /> */}
             {/* ========================== */}
             <PostForm create={createPost} />
+            <hr />
+            <AppInput placeholder={'Поиск...'} />
+            <AppSelect
+                value={selectedSort}
+                onChange={sortPosts}
+                defaultValue={'Сортировка:'}
+                options={[
+                    {value: 'title', name: 'По названию'},
+                    {value: 'description', name: 'По описанию'}
+                ]}
+            />
             {
                 posts.length
                     ? <PostsList remove={removePost} posts={posts} title={'JavaScript'} />
