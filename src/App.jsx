@@ -1,11 +1,10 @@
-import React, {useState, useRef} from "react"
+import React, {useState} from "react"
 import './styles/App.css'
 import Counter from "./components/11111/Counter"
 import ClassCounter from "./components/11111/ClassCounter"
 import InputText from "./components/11111/InputText"
 import PostsList from "./components/PostsList"
-import AppButton from "./components/ui/button/AppButton"
-import AppInput from "./components/ui/input/AppInput"
+import PostForm from "./components/PostForm"
 
 const POSTS = [
     {
@@ -28,24 +27,8 @@ const POSTS = [
 function App() {
     const [posts, setPosts] = useState(POSTS)
 
-    const [post, setPost] = useState({
-        title: '',
-        description: '',
-    })
-    // const inputRef = useRef()
-    const addNewPost = (event) => {
-        event.preventDefault()
-        setPosts([
-            ...posts,
-            {
-                ...post,
-                id: Date.now()
-            }
-        ])
-        setPost({
-            title: '',
-            description: ''
-        })
+    const createPost = (newPost) => {
+        setPosts([...posts, newPost])
     }
 
     return (
@@ -59,29 +42,8 @@ function App() {
             </div>
             <hr />
             {/* ========================== */}
-            <form action="">
-                {/* Управляемый компонент */}
-                <AppInput
-                    value={post.title}
-                    onChange={event => setPost({...post, title: event.target.value})}
-                    type={'text'}
-                    placeholder={'Название поста'}
-                />
-                <AppInput
-                    value={post.description}
-                    onChange={event => setPost({...post, description: event.target.value})}
-                    type={'text'}
-                    placeholder={'Описание поста'}
-                />
-                {/* Неуправляемый/Неконтролируемый компонент */}
-                {/* <AppInput
-                    ref={inputRef}
-                    type={'text'}
-                    placeholder={'Пример неуправляемого компонента'}
-                /> */}
-                <AppButton type={'submit'} onClick={addNewPost}>Создать пост</AppButton>
-            </form>
-            <PostsList posts={posts} title={'JavaScript'}></PostsList>
+            <PostForm create={createPost} />
+            <PostsList posts={posts} title={'JavaScript'} />
         </div>
     )
 }
