@@ -29,16 +29,24 @@ const POSTS = [
 function App() {
     const [posts, setPosts] = useState(POSTS)
     const [selectedSort, setSelectedSort] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
+    const sortedPosts = getSortedPosts()
+
+
+    function getSortedPosts() {
+        console.log('getSortedPosts');
+        if (selectedSort) return [...posts].sort((a,b) => a[selectedSort].localeCompare(b[selectedSort]))
+        return posts
+    }
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
     }
     const removePost = (post) => {
-        console.log('remove', post.id);
+        console.log('remove', post.id)
         setPosts(posts.filter(item => item.id !== post.id))
     }
     const sortPosts = (sort) => {
         setSelectedSort(sort)
-        setPosts([...posts].sort((a,b) => a[sort].localeCompare(b[sort])))
     }
 
     return (
@@ -54,7 +62,11 @@ function App() {
             {/* ========================== */}
             <PostForm create={createPost} />
             <hr />
-            <AppInput placeholder={'Поиск...'} />
+            <AppInput
+                placeholder={'Поиск...'}
+                value={searchQuery}
+                onChange={event => setSearchQuery(event.target.value)}
+            />
             <AppSelect
                 value={selectedSort}
                 onChange={sortPosts}
@@ -66,7 +78,7 @@ function App() {
             />
             {
                 posts.length
-                    ? <PostsList remove={removePost} posts={posts} title={'JavaScript'} />
+                    ? <PostsList remove={removePost} posts={sortedPosts} title={'JavaScript'} />
                     : <h2 style={{textAlign: 'center'}}>Посты не найдены!</h2>
             }
         </div>
