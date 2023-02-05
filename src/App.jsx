@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import './styles/App.css';
-import Counter from "./components/Counter";
-import ClassCounter from "./components/ClassCounter";
-import InputText from "./components/InputText";
+import Counter from "./components/11111/Counter";
+import ClassCounter from "./components/11111/ClassCounter";
+import InputText from "./components/11111/InputText";
 import PostsList from "./components/PostsList";
+import AppButton from "./components/ui/button/AppButton";
 
 const POSTS1 = [
     {
@@ -52,15 +53,14 @@ function App() {
                 <div className="first-components__counters">
                     <Counter></Counter>
                     <ClassCounter></ClassCounter>
-                    <button type="button">Создать пост</button>
                 </div>
             </div>
-
             <hr />
-            <hr />
+            {/* ========================== */}
             <form action="">
                 <input type="text" placeholder="Название поста" />
                 <input type="text" placeholder="Описание поста" />
+                <AppButton disabled type="button">Создать пост</AppButton>
             </form>
             <PostsList posts={posts1} title={"JavaScript"}></PostsList>
             <PostsList posts={posts2} title={"Python"}></PostsList>
