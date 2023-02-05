@@ -3,7 +3,7 @@ import classes from './AppButton.module.css'
 
 const AppButton = ({children, ...props}) => {
   return (
-    <button {...props} className={classes.appButton}>{children}</button>
+    <button type="button" {...props} className={classes.appButton}>{children}</button>
   )
 }
 

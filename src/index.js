@@ -9,7 +9,6 @@ root.render(
 );
 
 
-
 // const nestedElement = React.createElement('h6', {
 // }, 'Nested');
 // const element = React.createElement('button', {
@@ -18,4 +17,3 @@ root.render(
 // }, nestedElement);
 
 // root.render(element);
-
