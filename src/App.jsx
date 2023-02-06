@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useState, useMemo} from "react"
 import './styles/App.css'
 // import Counter from "./components/11111/Counter"
 // import ClassCounter from "./components/11111/ClassCounter"
@@ -30,14 +30,17 @@ function App() {
     const [posts, setPosts] = useState(POSTS)
     const [selectedSort, setSelectedSort] = useState('')
     const [searchQuery, setSearchQuery] = useState('')
-    const sortedPosts = getSortedPosts()
 
-
-    function getSortedPosts() {
-        console.log('getSortedPosts');
-        if (selectedSort) return [...posts].sort((a,b) => a[selectedSort].localeCompare(b[selectedSort]))
+    const sortedPosts = useMemo(()=> {
+        if (selectedSort) return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
         return posts
-    }
+
+    }, [selectedSort, posts]);
+    const sortedAndSearchedPosts = useMemo(() => {
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery))
+    }, [searchQuery, sortedPosts])
+
+
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
     }
@@ -77,8 +80,8 @@ function App() {
                 ]}
             />
             {
-                posts.length
-                    ? <PostsList remove={removePost} posts={sortedPosts} title={'JavaScript'} />
+                sortedAndSearchedPosts.length
+                    ? <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
                     : <h2 style={{textAlign: 'center'}}>Посты не найдены!</h2>
             }
         </div>
