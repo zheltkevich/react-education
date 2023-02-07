@@ -21,9 +21,27 @@
     margin-top: 15px;
     justify-content: space-between;
     align-items: center;
+    transition: 500ms ease-out;
+    transition-property: transform, opacity;
 }
 
 hr {
     margin-top: 15px;
     margin-bottom: 15px;
+}
+
+.post-enter {
+    transform: translateX(-150px);
+    opacity: 0;
+}
+.post-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+}
+.post-exit {
+    opacity: 1;
+}
+.post-exit-active {
+    transform: translateX(-150px);
+    opacity: 0;
 }
