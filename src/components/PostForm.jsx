@@ -8,7 +8,7 @@ const PostForm = ({create}) => {
 
     const [post, setPost] = useState({
         title: '',
-        description: '',
+        body: '',
     })
     // const inputRef = useRef()
     const addNewPost = (event) => {
@@ -21,7 +21,7 @@ const PostForm = ({create}) => {
         create(newPost)
         setPost({
             title: '',
-            description: ''
+            body: ''
         })
     }
   return (
@@ -34,8 +34,8 @@ const PostForm = ({create}) => {
                     placeholder={'Название поста'}
                 />
                 <AppInput
-                    value={post.description}
-                    onChange={event => setPost({...post, description: event.target.value})}
+                    value={post.body}
+                    onChange={event => setPost({...post, body: event.target.value})}
                     type={'text'}
                     placeholder={'Описание поста'}
                 />

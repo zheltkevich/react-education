@@ -1,5 +1,6 @@
-import React, {useState, useMemo} from "react"
+import React, {useState, useEffect} from "react"
 import {usePosts} from './hooks/usePosts'
+import PostServise from './API/PostService'
 import './styles/App.css'
 // import Counter from "./components/11111/Counter"
 // import ClassCounter from "./components/11111/ClassCounter"
@@ -11,29 +12,38 @@ import AppModal from "./components/ui/modal/AppModal"
 import AppButton from "./components/ui/button/AppButton"
 
 
-const POSTS = [
-    {
-        id: 1,
-        title: 'aa',
-        description: 'zz'
-    },
-    {
-        id: 2,
-        title: 'bb',
-        description: 'yy'
-    },
-    {
-        id: 3,
-        title: 'cc',
-        description: 'xx'
-    },
-]
+// const POSTS = [
+//     {
+//         id: 1,
+//         title: 'aa',
+//         description: 'zz'
+//     },
+//     {
+//         id: 2,
+//         title: 'bb',
+//         description: 'yy'
+//     },
+//     {
+//         id: 3,
+//         title: 'cc',
+//         description: 'xx'
+//     },
+// ]
 
 function App() {
-    const [posts, setPosts] = useState(POSTS)
+    const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+
+    async function fetchPosts() {
+        const posts = await PostServise.getAll()
+        setPosts(posts)
+    }
+
+    useEffect(() => {
+        fetchPosts()
+    }, [filter])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
