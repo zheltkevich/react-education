@@ -2,11 +2,11 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 3px dashed teal;
-    stroke-dashoffset: 20px;
-    stroke-dasharray: 20px;
+    border: 6px dashed teal;
+    stroke-dashoffset: 50px;
+    stroke-dasharray: 2px;
     stroke-width: 20px;
-    animation: rotate 3s infinite linear;
+    animation: rotate 2s infinite linear;
 }
 
 @keyframes rotate {

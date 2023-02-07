@@ -23,6 +23,7 @@
     align-items: center;
     transition: 500ms ease-out;
     transition-property: transform, opacity;
+    column-gap: 16px;
 }
 
 hr {

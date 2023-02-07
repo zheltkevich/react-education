@@ -44,7 +44,7 @@ function App() {
             const posts = await PostServise.getAll()
         setPosts(posts)
         setIsPostsLoading(false)
-        }, 1000);
+        }, 2000);
 
     }
 
