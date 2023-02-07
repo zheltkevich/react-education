@@ -10,6 +10,7 @@ import PostForm from "./components/PostForm"
 import PostFilter from "./components/PostFilter"
 import AppModal from "./components/ui/modal/AppModal"
 import AppButton from "./components/ui/button/AppButton"
+import AppLoader from "./components/ui/loader/AppLoader"
 
 
 // const POSTS = [
@@ -34,11 +35,17 @@ function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
+    const [isPostsLoading, setIsPostsLoading] = useState(false)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
     async function fetchPosts() {
-        const posts = await PostServise.getAll()
+        setIsPostsLoading(true)
+        setTimeout(async () => {
+            const posts = await PostServise.getAll()
         setPosts(posts)
+        setIsPostsLoading(false)
+        }, 1000);
+
     }
 
     useEffect(() => {
@@ -72,7 +79,12 @@ function App() {
             </AppModal>
             <hr />
             <PostFilter filter={filter} setFilter={setFilter}></PostFilter>
-            <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
+            {
+                isPostsLoading
+                    ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
+                    : <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
+            }
+
         </div>
     )
 }
