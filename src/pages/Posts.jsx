@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useRef} from "react"
 import {usePosts} from '../hooks/usePosts'
 import {useFetching} from '../hooks/useFetching'
 import {getPagesCount, getPagesArray} from '../utils/pages'
@@ -19,13 +19,16 @@ const Posts = () => {
     const [limit, setLimit] = useState(10)
     const [page, setPage] = useState(1)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+    const lastElement = useRef()
+    const observer = useRef()
+    console.log(lastElement);
 
 
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
         const response = await PostService.getAll(limit, page)
 
-        setPosts(response.data)
+        setPosts([...posts, ...response.data])
 
         const totalCount = Number(response.headers['x-total-count'])
         const totalPagesCount = getPagesCount(totalCount, limit)
@@ -34,8 +37,22 @@ const Posts = () => {
     })
 
     useEffect(() => {
+        if (isPostsLoading) return
+        if (observer.current) observer.current.disconnect()
+
+        const callback = function(entries, observer) {
+            if (entries[0].isIntersecting && page < totalPages) {
+               setPage(page + 1)
+            }
+        }
+
+        observer.current = new IntersectionObserver(callback)
+        observer.current.observe(lastElement.current)
+    }, [isPostsLoading])
+
+    useEffect(() => {
         fetchPosts(limit, page)
-    }, [])
+    }, [page])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -44,7 +61,6 @@ const Posts = () => {
 
     const changePage = (page) => {
         setPage(page)
-        fetchPosts(limit, page)
     }
 
     const removePost = (post) => {
@@ -69,13 +85,13 @@ const Posts = () => {
             <hr />
             <PostFilter filter={filter} setFilter={setFilter}></PostFilter>
             {
-                postError
-                    && <h1 style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>Произошла ошибка {postError}</h1>
+                postError && <h1 style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>Произошла ошибка {postError}</h1>
             }
+            <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
+            <div ref={lastElement} style={{height: 0}}></div>
             {
-                isPostsLoading
-                    ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
-                    : <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
+                isPostsLoading && <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
+
             }
             <AppPagination
                 totalPages={totalPages}
