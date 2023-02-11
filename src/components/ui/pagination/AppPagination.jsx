@@ -3,7 +3,6 @@ import {getPagesArray} from '../../../utils/pages'
 
 const AppPagination = ({totalPages, page, changePage}) => {
     let pagesArray = getPagesArray(totalPages)
-    console.log({totalPages, page, changePage});
 
     return (
         <div className="pagination">

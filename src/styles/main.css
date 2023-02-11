@@ -4,13 +4,20 @@
     box-sizing: border-box;
 }
 
-#root {
-    display: flex ;
-    justify-content: center;
+body {
+    overflow-y: scroll;
 }
 
-.app {
-    width: 800px;
+#root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
     padding: 16px;
 }
 
@@ -55,7 +62,8 @@ hr {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     background-color: white;
 }
 
@@ -71,4 +79,22 @@ hr {
     border-color: orange;
     font-weight: bold;
     background-color: rgb(222, 249, 249);
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    background-color: lightgray;
+    padding: 16px;
+}
+
+.navbar__links {
+    display: flex;
+    gap: 16px;
 }

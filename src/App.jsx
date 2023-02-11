@@ -1,90 +1,27 @@
-import React, {useState, useEffect} from "react"
-import {usePosts} from './hooks/usePosts'
-import {useFetching} from './hooks/useFetching'
-import {getPagesCount, getPagesArray} from './utils/pages'
-import PostServise from './API/PostService'
-import './styles/App.css'
-import PostsList from "./components/PostsList"
-import PostForm from "./components/PostForm"
-import PostFilter from "./components/PostFilter"
-import AppModal from "./components/ui/modal/AppModal"
-import AppButton from "./components/ui/button/AppButton"
-import AppLoader from "./components/ui/loader/AppLoader"
-import AppPagination from "./components/ui/pagination/AppPagination"
+import React from "react"
+import './styles/main.css'
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
+import About from "./pages/About"
+import Posts from "./pages/Posts"
+// import NotFound from "./pages/NotFound"
+import AppNavbar from "./components/ui/navbar/AppNavbar"
 
 function App() {
-    const [posts, setPosts] = useState([])
-    const [filter, setFilter] = useState({sort: '', query: ''})
-    const [modal, setModal] = useState(false)
-    const [totalPages, setTotalPages] = useState(0)
-    const [limit, setLimit] = useState(10)
-    const [page, setPage] = useState(1)
-    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
-
-
-
-    const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
-        const response = await PostServise.getAll(limit, page)
-
-        setPosts(response.data)
-
-        const totalCount = Number(response.headers['x-total-count'])
-        const totalPagesCount = getPagesCount(totalCount, limit)
-        console.log(totalCount);
-
-        setTotalPages(totalPagesCount)
-    })
-
-    useEffect(() => {
-        fetchPosts(limit, page)
-    }, [])
-
-    const createPost = (newPost) => {
-        setPosts([...posts, newPost])
-        setModal(false)
-    }
-
-    const changePage = (page) => {
-        setPage(page)
-        fetchPosts(limit, page)
-    }
-
-    const removePost = (post) => {
-        setPosts(posts.filter(item => item.id !== post.id))
-    }
-
     return (
-        <div className="app">
-            {/* <div className="first-components">
-                <InputText></InputText>
-                <div className="first-components__counters">
-                    <Counter></Counter>
-                    <ClassCounter></ClassCounter>
-                </div>
+        <BrowserRouter>
+            <AppNavbar />
+            <div className="container">
+                <Routes>
+                    <Route path="/about" element={<About />} />
+                    <Route path="/posts" element={<Posts />} />
+                    {/* <Route path="*" element={<NotFound />} /> */}
+                    <Route
+                        path="*"
+                        element={<Navigate to="/posts" replace />}
+                    />
+                </Routes>
             </div>
-            <hr /> */}
-            {/* ========================== */}
-            <AppButton style={{marginTop: '30px'}} onClick={() => setModal(true)}>Создать пост</AppButton>
-            <AppModal visible={modal} setVisible={setModal}>
-                <PostForm create={createPost} />
-            </AppModal>
-            <hr />
-            <PostFilter filter={filter} setFilter={setFilter}></PostFilter>
-            {
-                postError
-                    && <h1 style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>Произошла ошибка {postError}</h1>
-            }
-            {
-                isPostsLoading
-                    ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
-                    : <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
-            }
-            <AppPagination
-                totalPages={totalPages}
-                page={page}
-                changePage={changePage}
-            />
-        </div>
+        </BrowserRouter>
     )
 }
 
