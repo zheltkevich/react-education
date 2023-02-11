@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {usePosts} from '../hooks/usePosts'
 import {useFetching} from '../hooks/useFetching'
 import {getPagesCount, getPagesArray} from '../utils/pages'
-import PostServise from '../API/PostService'
+import PostService from '../API/PostService'
 import PostsList from "../components/PostsList"
 import PostForm from "../components/PostForm"
 import PostFilter from "../components/PostFilter"
@@ -23,7 +23,7 @@ const Posts = () => {
 
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
-        const response = await PostServise.getAll(limit, page)
+        const response = await PostService.getAll(limit, page)
 
         setPosts(response.data)
 
