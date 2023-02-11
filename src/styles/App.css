@@ -46,3 +46,29 @@ hr {
     transform: translateX(-150px);
     opacity: 0;
 }
+
+.pagination {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    background-color: white;
+}
+
+.pagination__item {
+    margin-top: unset;
+    margin-bottom: unset;
+    padding: 10px;
+    border: 1px solid teal;
+    cursor: pointer;
+}
+
+.pagination__item.current {
+    border-color: orange;
+    font-weight: bold;
+    background-color: rgb(222, 249, 249);
+}

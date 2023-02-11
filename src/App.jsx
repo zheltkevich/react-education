@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react"
 import {usePosts} from './hooks/usePosts'
 import {useFetching} from './hooks/useFetching'
+import {getPagesCount, getPagesArray} from './utils/pages'
 import PostServise from './API/PostService'
 import './styles/App.css'
 // import Counter from "./components/11111/Counter"
@@ -13,47 +14,43 @@ import AppModal from "./components/ui/modal/AppModal"
 import AppButton from "./components/ui/button/AppButton"
 import AppLoader from "./components/ui/loader/AppLoader"
 
-
-// const POSTS = [
-//     {
-//         id: 1,
-//         title: 'aa',
-//         description: 'zz'
-//     },
-//     {
-//         id: 2,
-//         title: 'bb',
-//         description: 'yy'
-//     },
-//     {
-//         id: 3,
-//         title: 'cc',
-//         description: 'xx'
-//     },
-// ]
-
 function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
+    const [totalPages, setTotalPages] = useState(0)
+    const [limit, setLimit] = useState(10)
+    const [page, setPage] = useState(1)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
-    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-        const posts = await PostServise.getAll()
+    let pagesArray = getPagesArray(totalPages)
 
-        setPosts(posts)
+
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const response = await PostServise.getAll(limit, page)
+
+        setPosts(response.data)
+
+        const totalCount = Number(response.headers['x-total-count'])
+        const totalPagesCount = getPagesCount(totalCount, limit)
+        console.log(totalCount);
+
+        setTotalPages(totalPagesCount)
     })
 
     useEffect(() => {
         fetchPosts()
-    }, [])
+    }, [page])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
         setModal(false)
     }
 
+    const changePage = (pageNumber) => {
+        setPage(pageNumber)
+    }
+
     const removePost = (post) => {
-        console.log('remove', post.id)
         setPosts(posts.filter(item => item.id !== post.id))
     }
 
@@ -83,6 +80,19 @@ function App() {
                     ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
                     : <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
             }
+            <div className="pagination">
+                {
+                    pagesArray.map(item =>
+                        <span
+                            className={page === item ? 'pagination__item current' : 'pagination__item'}
+                            key={item}
+                            onClick={() => changePage(item)}
+                        >
+                            {item}
+                        </span>
+                    )
+                }
+            </div>
 
         </div>
     )
