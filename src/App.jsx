@@ -4,15 +4,13 @@ import {useFetching} from './hooks/useFetching'
 import {getPagesCount, getPagesArray} from './utils/pages'
 import PostServise from './API/PostService'
 import './styles/App.css'
-// import Counter from "./components/11111/Counter"
-// import ClassCounter from "./components/11111/ClassCounter"
-// import InputText from "./components/11111/InputText"
 import PostsList from "./components/PostsList"
 import PostForm from "./components/PostForm"
 import PostFilter from "./components/PostFilter"
 import AppModal from "./components/ui/modal/AppModal"
 import AppButton from "./components/ui/button/AppButton"
 import AppLoader from "./components/ui/loader/AppLoader"
+import AppPagination from "./components/ui/pagination/AppPagination"
 
 function App() {
     const [posts, setPosts] = useState([])
@@ -22,10 +20,10 @@ function App() {
     const [limit, setLimit] = useState(10)
     const [page, setPage] = useState(1)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
-    let pagesArray = getPagesArray(totalPages)
 
 
-    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
         const response = await PostServise.getAll(limit, page)
 
         setPosts(response.data)
@@ -38,16 +36,17 @@ function App() {
     })
 
     useEffect(() => {
-        fetchPosts()
-    }, [page])
+        fetchPosts(limit, page)
+    }, [])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
         setModal(false)
     }
 
-    const changePage = (pageNumber) => {
-        setPage(pageNumber)
+    const changePage = (page) => {
+        setPage(page)
+        fetchPosts(limit, page)
     }
 
     const removePost = (post) => {
@@ -80,20 +79,11 @@ function App() {
                     ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
                     : <PostsList remove={removePost} posts={sortedAndSearchedPosts} title={'JavaScript'} />
             }
-            <div className="pagination">
-                {
-                    pagesArray.map(item =>
-                        <span
-                            className={page === item ? 'pagination__item current' : 'pagination__item'}
-                            key={item}
-                            onClick={() => changePage(item)}
-                        >
-                            {item}
-                        </span>
-                    )
-                }
-            </div>
-
+            <AppPagination
+                totalPages={totalPages}
+                page={page}
+                changePage={changePage}
+            />
         </div>
     )
 }
