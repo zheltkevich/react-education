@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react"
 import {usePosts} from './hooks/usePosts'
+import {useFetching} from './hooks/useFetching'
 import PostServise from './API/PostService'
 import './styles/App.css'
 // import Counter from "./components/11111/Counter"
@@ -35,22 +36,16 @@ function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
-    const [isPostsLoading, setIsPostsLoading] = useState(false)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const posts = await PostServise.getAll()
 
-    async function fetchPosts() {
-        setIsPostsLoading(true)
-        setTimeout(async () => {
-            const posts = await PostServise.getAll()
         setPosts(posts)
-        setIsPostsLoading(false)
-        }, 2000);
-
-    }
+    })
 
     useEffect(() => {
         fetchPosts()
-    }, [filter])
+    }, [])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -79,6 +74,10 @@ function App() {
             </AppModal>
             <hr />
             <PostFilter filter={filter} setFilter={setFilter}></PostFilter>
+            {
+                postError
+                    && <h1 style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>Произошла ошибка {postError}</h1>
+            }
             {
                 isPostsLoading
                     ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><AppLoader/></div>
