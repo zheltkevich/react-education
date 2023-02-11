@@ -10,6 +10,7 @@ import AppModal from "../components/ui/modal/AppModal"
 import AppButton from "../components/ui/button/AppButton"
 import AppLoader from "../components/ui/loader/AppLoader"
 import AppPagination from "../components/ui/pagination/AppPagination"
+import { useObserver } from "../hooks/useObserver"
 
 const Posts = () => {
     const [posts, setPosts] = useState([])
@@ -20,7 +21,7 @@ const Posts = () => {
     const [page, setPage] = useState(1)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
     const lastElement = useRef()
-    const observer = useRef()
+
     console.log(lastElement);
 
 
@@ -36,19 +37,9 @@ const Posts = () => {
         setTotalPages(totalPagesCount)
     })
 
-    useEffect(() => {
-        if (isPostsLoading) return
-        if (observer.current) observer.current.disconnect()
-
-        const callback = function(entries, observer) {
-            if (entries[0].isIntersecting && page < totalPages) {
-               setPage(page + 1)
-            }
-        }
-
-        observer.current = new IntersectionObserver(callback)
-        observer.current.observe(lastElement.current)
-    }, [isPostsLoading])
+    useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+        setPage(page + 1)
+    })
 
     useEffect(() => {
         fetchPosts(limit, page)
