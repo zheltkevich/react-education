@@ -9,6 +9,7 @@ import PostFilter from "../components/PostFilter"
 import AppModal from "../components/ui/modal/AppModal"
 import AppButton from "../components/ui/button/AppButton"
 import AppLoader from "../components/ui/loader/AppLoader"
+import AppSelect from "../components/ui/select/AppSelect"
 import AppPagination from "../components/ui/pagination/AppPagination"
 import { useObserver } from "../hooks/useObserver"
 
@@ -43,7 +44,7 @@ const Posts = () => {
 
     useEffect(() => {
         fetchPosts(limit, page)
-    }, [page])
+    }, [page, limit])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -75,6 +76,17 @@ const Posts = () => {
             </AppModal>
             <hr />
             <PostFilter filter={filter} setFilter={setFilter}></PostFilter>
+            <AppSelect
+                value={limit}
+                defaultValue={'Кол-во элементов на странице'}
+                options={[
+                    { value: 5, name: '5' },
+                    { value: 10, name: '10' },
+                    { value: 25, name: '25' },
+                    { value: -1, name: 'Показать все' }
+                ]}
+                onChange={value => setLimit(value)}
+            ></AppSelect>
             {
                 postError && <h1 style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>Произошла ошибка {postError}</h1>
             }
