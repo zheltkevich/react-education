@@ -23,7 +23,9 @@ function App() {
             isLoading
         }}>
             <BrowserRouter>
-                <AppNavbar />
+                {
+                    isAuth && <AppNavbar />
+                }
                 <AppRouter />
             </BrowserRouter>
         </AuthContext.Provider>
