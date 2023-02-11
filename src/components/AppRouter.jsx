@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Route, Routes, Navigate } from "react-router-dom"
 import About from "../pages/About"
 import Posts from "../pages/Posts"
 // import NotFound from "../pages/NotFound"
 import PostIdPage from '../pages/PostIdPage'
 import Login from '../pages/Login'
+import { AuthContext } from '../context'
 
 const AppRouter = () => {
-    const authenticated = false;
+    const { isAuth } = useContext(AuthContext)
+    console.log(isAuth);
 
     return (
         <div className="container">
             {
-                authenticated
+                isAuth
                     ?
                         <Routes>
                             <Route path="/about" element={<About />} />
