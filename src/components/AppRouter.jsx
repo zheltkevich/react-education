@@ -6,10 +6,15 @@ import Posts from "../pages/Posts"
 import PostIdPage from '../pages/PostIdPage'
 import Login from '../pages/Login'
 import { AuthContext } from '../context'
+import AppLoader from './ui/loader/AppLoader'
 
 const AppRouter = () => {
-    const { isAuth } = useContext(AuthContext)
+    const { isAuth, isLoading } = useContext(AuthContext)
     console.log(isAuth);
+
+    if (isLoading) {
+        return <AppLoader></AppLoader>
+    }
 
     return (
         <div className="container">
